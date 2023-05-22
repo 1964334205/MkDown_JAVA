@@ -1,19 +1,16 @@
 package com.example.mkdown_java.MkDownNote.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
-import java.sql.Time;
-import java.util.Date;
-import java.util.List;
-
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.example.mkdown_java.Img.model.Img;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.sql.Time;
 
 /**
  * <p>
@@ -34,44 +31,45 @@ public class Note implements Serializable {
     /**
      * ID
      */
-    @TableId(value = "ID", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "note_id")
+    private String noteId;
 
     /**
      * 用户ID
      */
-    @TableField("USER_ID")
+    @TableField("user_id")
     private String userId;
 
     /**
      * 笔记标题
      */
-    @TableField("Note_Title")
+    @TableField("note_title")
     private String noteTitle;
 
     /**
      * 笔记内容
      */
-    @TableField("Note_Particulars")
+    @TableField("note_particulars")
     private String noteParticulars;
 
-    private Img[] imgs;
+    @TableField(exist = false)
+    private Img[] noteImgs;
     /**
      * 笔记图片
      */
-    @TableField(value = "Note_Img_Ids",typeHandler = JacksonTypeHandler.class)
+    @TableField(value = "note_img_ids",typeHandler = JacksonTypeHandler.class)
     private String noteImgIds;
     /**
      *
      * 创建时间
      */
-    @TableField("Found_Time")
+    @TableField("found_time")
     private Time foundTime;
 
     /**
      * 是否删除(0 不删除，1 删除)
      */
-    @TableField("IS_Del")
-    private int isDel;
+    @TableField("status")
+    private int status;
 
 }

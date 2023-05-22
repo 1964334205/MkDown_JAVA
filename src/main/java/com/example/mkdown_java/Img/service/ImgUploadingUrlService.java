@@ -2,21 +2,11 @@ package com.example.mkdown_java.Img.service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mkdown_java.Img.dao.ImgDao;
-import com.example.mkdown_java.Img.dao.ImgDao;
 import com.example.mkdown_java.Img.model.Img;
-import com.example.mkdown_java.Img.model.Img;
-import com.example.mkdown_java.MkDownNote.dao.NoteSubmitDao;
-import com.example.mkdown_java.MkDownNote.model.Note;
-import com.example.mkdown_java.common.ServletUtils;
-import com.example.mkdown_java.common.UUIDUtil;
 import com.example.mkdown_java.config.QiniuServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.*;
-import java.net.Socket;
-import java.util.Map;
 
 /**
  * <p>

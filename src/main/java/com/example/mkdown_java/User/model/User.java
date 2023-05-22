@@ -1,4 +1,4 @@
-package com.example.mkdown_java.Img.model;
+package com.example.mkdown_java.User.model;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.sql.Time;
 
 /**
  * <p>
@@ -21,35 +20,29 @@ import java.sql.Time;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("mkDownImg")
-public class Img implements Serializable {
+@TableName("user")
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 文件ID
-     */
-    @TableId(value = "img_id")
-    private String imgId;
-
-    /**
      * 用户ID
      */
-    @TableField("img_url")
-    private String imgUrl;
+    @TableId(value = "user_id")
+    private String userId;
 
     /**
-     * 创建时间
+     * 用户名称
      */
-    @TableField("upload_time")
-    private Time uploadTime;
+    @TableField("user_name")
+    private String userName;
 
     /**
-     * 是否删除(0 不删除，1 删除)
+     * 用户密码
      */
-    @TableField("status")
-    private int status;
-    //state
-    //status
+    @TableField("user_password")
+    private String userPassword;
 
+    @TableField(exist = false)
+    private String userPasswordVerify;
 }

@@ -1,21 +1,31 @@
 package com.example.mkdown_java.config;
 
 import jakarta.servlet.MultipartConfigElement;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
+@SpringBootConfiguration
 public class WebConfig implements WebMvcConfigurer {
 
-    //    @Override
+    @Override
     public void addCorsMappings(CorsRegistry registry) {
-        CorsRegistration registration =   registry.addMapping("/**");
+        registry.addMapping("/**")
+                .allowCredentials(true)
+                .allowedOrigins("http://localhost:8080")
+                .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
+                .allowedHeaders("*")
+                .maxAge(3600);
 //        registration.allowedOrigins("http://127.0.0.1:8080");
-        registration.allowedOrigins("http://localhost:8080");
+//        registration.allowedOrigins("http://localhost:8080");
 
     }
 
@@ -38,7 +48,6 @@ public class WebConfig implements WebMvcConfigurer {
         factory.setMaxRequestSize(DataSize.ofMegabytes(30));
         return factory.createMultipartConfig();
     }
-
 }
 
 
