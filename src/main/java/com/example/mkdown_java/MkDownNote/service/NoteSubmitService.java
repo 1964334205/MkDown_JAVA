@@ -39,16 +39,22 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
 
     public Note selectNote(String noteId) {
         Note note = new Note();
-        note = this.getById(noteId);
-        String[] imgstring = note.getNoteImgIds().replace("\"","").split(",");
-        System.out.println(imgstring.toString());
-        Img[] imgs = new Img[imgstring.length];
-        for (int i = 0; i < imgs.length; i++) {
-            imgs[i] = imgUploadingUrlService.getById(imgstring[i]);
+        System.out.println(note.toString());
+        if(noteId == "0"){
+            System.out.println("新增笔记");
+        }else {
+            note = this.getById(noteId);
+            String[] imgstring = note.getNoteImgIds().replace("\"","").split(",");
+            System.out.println(imgstring.toString());
+            Img[] imgs = new Img[imgstring.length];
+            for (int i = 0; i < imgs.length; i++) {
+                imgs[i] = imgUploadingUrlService.getById(imgstring[i]);
+            }
+            note.setNoteImgs(imgs);
+            System.out.println("note："+note);
+            System.out.println("数据库读取内容："+note.getNoteParticulars());
         }
-        note.setNoteImgs(imgs);
-        System.out.println("note："+note);
-        System.out.println("数据库读取内容："+note.getNoteParticulars());
+
         return note;
     }
 

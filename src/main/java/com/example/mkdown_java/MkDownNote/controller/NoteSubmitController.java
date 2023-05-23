@@ -24,7 +24,7 @@ public class NoteSubmitController {
     @ResponseBody
     @GetMapping("/selectNote")
     public Note selectNote(String noteId){
-        System.out.println("进入查询");
+        System.out.println("进入查询 笔记ID：" + noteId);
         Note note = noteSubmitService.selectNote(noteId);
         return note;
     }

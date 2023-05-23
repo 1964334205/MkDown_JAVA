@@ -10,6 +10,8 @@ spring:
   messages:
     basename: messages
 
+  main:
+    allow-bean-definition-overriding: true
 Qiniu:
   AccessKey:
     c07IdeJTcsMr0b23Dqw6Ay75wsVQZ5jzTsdJrIfC
