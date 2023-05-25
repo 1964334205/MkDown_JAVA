@@ -1,12 +1,6 @@
 package com.example.mkdown_java.MkDownElasticSearch;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -23,7 +17,7 @@ import java.io.Serializable;
  * @since 2019-11-22
  */
 @Data
-@Document(indexName = "elasticSearchNote")
+@Document(indexName = "elastic_search_note")
 public class ElasticSearchNote implements Serializable {
 
     /**

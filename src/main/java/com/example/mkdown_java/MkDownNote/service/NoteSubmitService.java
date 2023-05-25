@@ -6,10 +6,15 @@ import com.example.mkdown_java.Img.service.ImgUploadingUrlService;
 import com.example.mkdown_java.MkDownNote.dao.NoteSubmitDao;
 import com.example.mkdown_java.MkDownNote.model.Note;
 import com.example.mkdown_java.common.UUIDUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -21,6 +26,9 @@ import java.util.*;
  */
 @Service
 public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
+
+    private static final Logger logger
+            = LoggerFactory.getLogger(NoteSubmitService.class);
     boolean flag = false;
     @Autowired
     private ImgUploadingUrlService imgUploadingUrlService;
@@ -29,6 +37,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
 //        note.setNoteParticulars((String) params.get("note_Particulars"));
         if(note.getNoteId() == null){
             note.setNoteId(UUIDUtil.getUUID());
+
             flag = this.save(note);
         }else {
             flag = this.updateById(note);
@@ -51,8 +60,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
                 imgs[i] = imgUploadingUrlService.getById(imgstring[i]);
             }
             note.setNoteImgs(imgs);
-            System.out.println("note："+note);
-            System.out.println("数据库读取内容："+note.getNoteParticulars());
+
         }
 
         return note;
