@@ -56,6 +56,9 @@ public class Note implements Serializable {
     @TableField("note_particulars")
     private String noteParticulars;
 
+    @TableField("es_id")
+    private String esId;
+
     @TableField(exist = false)
     private Img[] noteImgs;
     /**

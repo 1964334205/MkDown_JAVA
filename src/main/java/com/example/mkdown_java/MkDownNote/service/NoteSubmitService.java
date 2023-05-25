@@ -3,6 +3,8 @@ package com.example.mkdown_java.MkDownNote.service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mkdown_java.Img.model.Img;
 import com.example.mkdown_java.Img.service.ImgUploadingUrlService;
+import com.example.mkdown_java.MkDownElasticSearch.model.ElasticSearchNote;
+import com.example.mkdown_java.MkDownElasticSearch.service.ElasticSearchServer;
 import com.example.mkdown_java.MkDownNote.dao.NoteSubmitDao;
 import com.example.mkdown_java.MkDownNote.model.Note;
 import com.example.mkdown_java.common.UUIDUtil;
@@ -32,14 +34,25 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
     boolean flag = false;
     @Autowired
     private ImgUploadingUrlService imgUploadingUrlService;
-    public boolean Submit(Note note) {
 
+    @Autowired
+    private ElasticSearchServer elasticSearchServer;
+
+    public boolean Submit(Note note) {
+        ElasticSearchNote elasticSearchNote = new ElasticSearchNote();
 //        note.setNoteParticulars((String) params.get("note_Particulars"));
         if(note.getNoteId() == null){
             note.setNoteId(UUIDUtil.getUUID());
-
+            elasticSearchNote.setNoteId(note.getNoteId());
+            elasticSearchNote.setNoteTitle(note.getNoteTitle());
+            elasticSearchNote.setNoteParticulars(note.getNoteParticulars());
+            note.setEsId(elasticSearchServer.save(elasticSearchNote));
             flag = this.save(note);
         }else {
+            elasticSearchNote.setNoteId(note.getNoteId());
+            elasticSearchNote.setNoteTitle(note.getNoteTitle());
+            elasticSearchNote.setNoteParticulars(note.getNoteParticulars());
+            note.setEsId(elasticSearchServer.save(elasticSearchNote));
             flag = this.updateById(note);
         }
 

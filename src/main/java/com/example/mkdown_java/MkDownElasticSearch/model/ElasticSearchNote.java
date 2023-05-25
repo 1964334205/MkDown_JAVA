@@ -1,4 +1,4 @@
-package com.example.mkdown_java.MkDownElasticSearch;
+package com.example.mkdown_java.MkDownElasticSearch.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

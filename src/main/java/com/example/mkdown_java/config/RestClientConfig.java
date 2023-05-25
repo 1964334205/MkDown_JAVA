@@ -1,4 +1,4 @@
-package com.example.mkdown_java.MkDownElasticSearch;
+package com.example.mkdown_java.config;
 
 
 import nl.altindag.ssl.SSLFactory;
