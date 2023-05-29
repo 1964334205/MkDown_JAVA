@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserDao extends BaseMapper<User> {
+//    cooke = "uuiddfsjfksjfklsjfjsdkjfa";   //  30
 
+//    sleect cooke where uuser_id = "123 ordr by time";
 }

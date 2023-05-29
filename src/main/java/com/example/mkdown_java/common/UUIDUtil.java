@@ -3,11 +3,11 @@ import java.util.UUID;
 
 public class UUIDUtil {
 
-    public static String getUUID(){
-        String id = UUID.randomUUID().toString();
-        String uid = id.replaceAll("-", "");
+    public static Integer getUUID(){
+        Integer uuid=UUID.randomUUID().toString().replaceAll("-","").hashCode();
+        uuid = uuid < 0 ? -uuid : uuid;//String.hashCode() 值会为空
 
-        return uid;
+        return uuid;
     }
 }
 

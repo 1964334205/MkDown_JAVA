@@ -3,16 +3,13 @@ package com.example.mkdown_java.MkDownElasticSearch.service;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.example.mkdown_java.MkDownElasticSearch.model.ElasticSearchNote;
 import org.elasticsearch.client.RestClient;
-import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
@@ -52,25 +49,31 @@ public class ElasticSearchServer {
 
 
 
-    public String save(ElasticSearchNote elasticSearchNote) {
-        ElasticSearchNote elasticSearchNote1;
-        elasticSearchNote1 = elasticsearchOperations.save(elasticSearchNote);
-        return elasticSearchNote1.getNoteId();
+    public int save(ElasticSearchNote elasticSearchNote) {
+        return elasticsearchOperations.save(elasticSearchNote).getNoteId();
+    }
+
+    public int delete(int delete) {
+        ElasticSearchNote elasticSearchNote = new ElasticSearchNote();
+        elasticSearchNote.setNoteId(delete);
+        return Integer.parseInt(elasticsearchOperations.delete(elasticSearchNote));
     }
 
 
 
+    public ElasticSearchNote findById(@PathVariable("id")  int id) {
 
-//    public ElasticSearchNote findById(@PathVariable("id")  Long id) {
-//        ElasticSearchNote elasticSearchNote = elasticsearchOperations.get(id.toString(), ElasticSearchNote.class);
-//        return elasticSearchNote;
-//    }
+        return elasticsearchOperations.get(Integer.toString(id), ElasticSearchNote.class);
+    }
 
 
-    public List<ElasticSearchNote> findByNoteTitle(@PathVariable("noteTitle")  String noteTitle) {
-        System.out.println(noteTitle);
-        Criteria criteria = new Criteria("noteTitle").is(noteTitle);
+    public List<ElasticSearchNote> findByNoteTitleAndNoteParticulars(String noteTitleAndNoteParticulars,int userId) {
+        System.out.println(noteTitleAndNoteParticulars);
+        Criteria criteria = new Criteria("userId").is(userId).subCriteria(
+                new Criteria("noteParticulars").matches(noteTitleAndNoteParticulars).or("noteTitle").matches(noteTitleAndNoteParticulars)
+                );
         Query query = new CriteriaQuery(criteria);
+
         SearchHits<ElasticSearchNote> elasticSearchNoteSearchHits= elasticsearchOperations.search(query, ElasticSearchNote.class);
 //         = new ArrayList<ElasticSearchNote>();
 

@@ -30,7 +30,7 @@ public class Img implements Serializable {
      * 文件ID
      */
     @TableId(value = "img_id")
-    private String imgId;
+    private Integer imgId;
 
     /**
      * 用户ID

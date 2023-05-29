@@ -24,8 +24,14 @@ public class ElasticSearchNote implements Serializable {
      * ID
      */
     @Id
-    @Field(type = FieldType.Text)
-    private String noteId;
+    @Field(type = FieldType.Integer)
+    private int noteId;
+
+    /**
+     * 用户ID
+     */
+    @Field(analyzer="user_id")
+    private int userId;
 
     /**
      * 笔记标题

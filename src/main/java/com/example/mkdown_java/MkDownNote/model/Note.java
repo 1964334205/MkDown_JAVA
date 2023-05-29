@@ -3,15 +3,10 @@ package com.example.mkdown_java.MkDownNote.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.example.mkdown_java.Img.model.Img;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 import java.sql.Time;
@@ -36,13 +31,13 @@ public class Note implements Serializable {
      * ID
      */
     @TableId(value = "note_id")
-    private String noteId;
+    private int noteId;
 
     /**
      * 用户ID
      */
     @TableField("user_id")
-    private String userId;
+    private int userId;
 
     /**
      * 笔记标题
@@ -57,14 +52,14 @@ public class Note implements Serializable {
     private String noteParticulars;
 
     @TableField("es_id")
-    private String esId;
+    private int esId;
 
     @TableField(exist = false)
     private Img[] noteImgs;
     /**
      * 笔记图片
      */
-    @TableField(value = "note_img_ids",typeHandler = JacksonTypeHandler.class)
+    @TableField(value = "note_img_ids")
     private String noteImgIds;
     /**
      *
