@@ -19,6 +19,7 @@ public class NoteSubmitController {
     @PostMapping("/Submit")
     public Boolean Submit(@RequestBody  Note note){
         System.out.println("提交内容："+note.toString());
+        note.setUserId(userIdLs);
         Boolean flag = noteSubmitService.Submit(note);
         return flag;
     }
