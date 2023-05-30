@@ -1,5 +1,6 @@
 package com.example.mkdown_java.MkDownNote.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,7 +10,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.sql.Time;
 
 /**
  * <p>
@@ -30,7 +30,7 @@ public class Note implements Serializable {
     /**
      * ID
      */
-    @TableId(value = "note_id")
+    @TableId(value = "note_id",type = IdType.AUTO)
     private int noteId;
 
     /**
@@ -66,7 +66,7 @@ public class Note implements Serializable {
      * 创建时间
      */
     @TableField("found_time")
-    private Time foundTime;
+    private String foundTime;
 
     /**
      * 是否删除(0 不删除，1 删除)

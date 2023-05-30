@@ -17,11 +17,11 @@ public class NoteSubmitController {
     private NoteSubmitService noteSubmitService;
     @ResponseBody
     @PostMapping("/Submit")
-    public Boolean Submit(@RequestBody  Note note){
+    public int Submit(@RequestBody  Note note){
         System.out.println("提交内容："+note.toString());
         note.setUserId(userIdLs);
-        Boolean flag = noteSubmitService.Submit(note);
-        return flag;
+        int noteId = noteSubmitService.Submit(note);
+        return noteId;
     }
 
     @ResponseBody
@@ -40,15 +40,15 @@ public class NoteSubmitController {
 
     @ResponseBody
     @GetMapping("/selectUserNote")
-    public List<Note> selectUserNote(int userId){
-        System.out.println("查询用户笔记  id:"+userId);
+    public List<Note> selectUserNote(){
+        System.out.println("查询用户笔记  id:");
         List<Note> noteList = noteSubmitService.selectUserNote(userIdLs);
         return noteList;
     }
 
     @ResponseBody
     @GetMapping("/selectNoteEs")
-    public List<Note> selectNoteEs(String noteTitleAndNoteParticulars,int userId){
+    public List<Note> selectNoteEs(String noteTitleAndNoteParticulars){
         System.out.println("查询es用户笔记  id:"+noteTitleAndNoteParticulars);
         List<Note> noteList = noteSubmitService.selectNoteEs(noteTitleAndNoteParticulars,userIdLs);
         return noteList;
