@@ -31,13 +31,13 @@ public class Note implements Serializable {
      * ID
      */
     @TableId(value = "note_id",type = IdType.AUTO)
-    private int noteId;
+    private Integer noteId;
 
     /**
      * 用户ID
      */
     @TableField("user_id")
-    private int userId;
+    private Integer userId;
 
     /**
      * 笔记标题
@@ -52,7 +52,7 @@ public class Note implements Serializable {
     private String noteParticulars;
 
     @TableField("es_id")
-    private int esId;
+    private Integer esId;
 
     @TableField(exist = false)
     private Img[] noteImgs;

@@ -67,7 +67,7 @@ public class ElasticSearchServer {
     }
 
 
-    public List<ElasticSearchNote> findByNoteTitleAndNoteParticulars(String noteTitleAndNoteParticulars,int userId) {
+    public List<ElasticSearchNote> findByNoteTitleAndNoteParticulars(String noteTitleAndNoteParticulars,Integer userId) {
         System.out.println(noteTitleAndNoteParticulars);
         Criteria criteria = new Criteria("userId").is(userId).subCriteria(
                 new Criteria("noteParticulars").matches(noteTitleAndNoteParticulars).or("noteTitle").matches(noteTitleAndNoteParticulars)

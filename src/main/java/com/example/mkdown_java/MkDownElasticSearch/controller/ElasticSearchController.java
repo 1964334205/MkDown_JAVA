@@ -19,6 +19,8 @@ public class ElasticSearchController {
     @Autowired
     private ElasticSearchServer elasticSearchServer;
 
+    private int userIdLs = 1909167524;
+
     @ResponseBody
     @PostMapping("/save")
     public int save(@RequestBody ElasticSearchNote elasticSearchNote) {
@@ -33,8 +35,8 @@ public class ElasticSearchController {
     }
 
     @GetMapping("/esNoteTitleAndNoteParticulars/{noteTitleAndNoteParticulars}/{userId}")
-    public List<ElasticSearchNote> findByNoteTitleAndNoteParticulars(@PathVariable("noteTitleAndNoteParticulars")  String noteTitleAndNoteParticulars,@PathVariable("userId")  int userId) {
-        return elasticSearchServer.findByNoteTitleAndNoteParticulars(noteTitleAndNoteParticulars,userId);
+    public List<ElasticSearchNote> findByNoteTitleAndNoteParticulars(@PathVariable("noteTitleAndNoteParticulars")  String noteTitleAndNoteParticulars) {
+        return elasticSearchServer.findByNoteTitleAndNoteParticulars(noteTitleAndNoteParticulars,userIdLs);
     }
 
     @GetMapping("/delete/{id}")

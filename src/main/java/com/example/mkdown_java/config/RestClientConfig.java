@@ -28,7 +28,7 @@ public class RestClientConfig extends ElasticsearchConfiguration {
         return ClientConfiguration.builder()
                 .connectedTo("localhost:9200")
                 .usingSsl(sslFactory.getSslContext(), sslFactory.getHostnameVerifier())
-                .withBasicAuth("elastic","tNg*=qwUN7lb7e3mj-*m")
+                .withBasicAuth("elastic","mOHbD=nx0mJAGXLGmomm")
 //                .withDefaultHeaders(compatibilityHeaders)    // this variant for imperative code
 //                .withHeaders(() -> compatibilityHeaders)     // this variant for reactive code
                 .build();

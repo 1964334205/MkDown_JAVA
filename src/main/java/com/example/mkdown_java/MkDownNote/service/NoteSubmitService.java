@@ -9,7 +9,6 @@ import com.example.mkdown_java.MkDownElasticSearch.service.ElasticSearchServer;
 import com.example.mkdown_java.MkDownNote.dao.NoteSubmitDao;
 import com.example.mkdown_java.MkDownNote.model.Note;
 import com.example.mkdown_java.common.Time;
-import com.example.mkdown_java.common.UUIDUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
     public int Submit(Note note) {
         ElasticSearchNote elasticSearchNote = new ElasticSearchNote();
 //        note.setNoteParticulars((String) params.get("note_Particulars"));
-        if(String.valueOf(note.getNoteId()).equals("0")){
+        if(note.getNoteId() == null){
 //            note.setNoteId(UUIDUtil.getUUID());
             note.setFoundTime(Time.returnTime());
             flag = this.save(note);
@@ -61,7 +60,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
             elasticSearchNote.setNoteParticulars(note.getNoteParticulars());
             elasticSearchNote.setUserId(note.getUserId());
             note.setEsId(elasticSearchServer.save(elasticSearchNote));
-
+            flag = this.updateById(note);
         }
         if (flag == true){
             return note.getNoteId();
@@ -70,7 +69,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
         }
     }
 
-    public boolean deleteNote(int noteId) {
+    public boolean deleteNote(Integer noteId) {
         Note note = this.getById(noteId);
         elasticSearchServer.delete(note.getEsId());
         String noteImgIds = note.getNoteImgIds();
@@ -91,9 +90,9 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
     }
 
 
-    public Note selectNote(int noteId) {
+    public Note selectNote(Integer noteId) {
         Note note = new Note();
-        if(String.valueOf(note.getNoteId()).equals("0")){
+        if(noteId == null){
             System.out.println("新增笔记");
         }else {
             note = this.getById(noteId);
@@ -112,7 +111,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
         return note;
     }
 
-    public List<Note> selectUserNote(int userId) {
+    public List<Note> selectUserNote(Integer userId) {
 //        List<Note> noteList = new LinkedList<>();
 //        Map map = new HashMap();
 //        map.put("user_id",userId);
@@ -128,7 +127,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
         return noteList;
     }
 
-    public List<Note> selectNoteEs(String noteTitleAndNoteParticulars,int userId) {
+    public List<Note> selectNoteEs(String noteTitleAndNoteParticulars,Integer userId) {
         List<Note> noteList = new LinkedList<>();
         if (noteTitleAndNoteParticulars == null || noteTitleAndNoteParticulars == ""){
             noteList = this.selectUserNote(userId);

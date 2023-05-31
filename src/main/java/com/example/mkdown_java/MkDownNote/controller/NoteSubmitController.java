@@ -26,7 +26,7 @@ public class NoteSubmitController {
 
     @ResponseBody
     @GetMapping("/selectNote")
-    public Note selectNote(int noteId){
+    public Note selectNote(Integer noteId){
         System.out.println("进入查询 笔记ID：" + noteId);
         Note note = noteSubmitService.selectNote(noteId);
         return note;
@@ -34,7 +34,7 @@ public class NoteSubmitController {
 
     @ResponseBody
     @GetMapping("/deleteNote")
-    public boolean deleteNote(int noteId) {
+    public boolean deleteNote(Integer noteId) {
         return noteSubmitService.deleteNote(noteId);
     }
 

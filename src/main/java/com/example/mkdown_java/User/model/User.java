@@ -30,7 +30,7 @@ public class User implements Serializable {
      * 用户ID
      */
     @TableId(value = "user_id")
-    private int userId;
+    private Integer userId;
 
     /**
      * 用户名称
