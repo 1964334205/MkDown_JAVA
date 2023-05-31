@@ -36,13 +36,13 @@ public class ElasticSearchNote implements Serializable {
     /**
      * 笔记标题
      */
-    @Field(analyzer="ik_max_word")
+    @Field(type = FieldType.Text,analyzer="ik_max_word")
     private String noteTitle;
 
     /**
      * 笔记内容
      */
-    @Field(analyzer="ik_max_word")
+    @Field(type = FieldType.Text,analyzer="ik_max_word")
     private String noteParticulars;
 
 }
