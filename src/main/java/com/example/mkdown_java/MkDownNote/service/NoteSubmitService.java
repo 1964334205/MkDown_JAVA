@@ -5,17 +5,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.mkdown_java.Img.model.Img;
 import com.example.mkdown_java.Img.service.ImgUploadingUrlService;
 import com.example.mkdown_java.MkDownElasticSearch.model.ElasticSearchNote;
-import com.example.mkdown_java.MkDownElasticSearch.service.ElasticSearchServer;
+import com.example.mkdown_java.MkDownElasticSearch.service.ElasticSearchServerImpl;
 import com.example.mkdown_java.MkDownNote.dao.NoteSubmitDao;
 import com.example.mkdown_java.MkDownNote.model.Note;
 import com.example.mkdown_java.common.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -35,7 +37,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
     private ImgUploadingUrlService imgUploadingUrlService;
 
     @Autowired
-    private ElasticSearchServer elasticSearchServer;
+    private ElasticSearchServerImpl elasticSearchServerImpl;
 
     public int Submit(Note note) {
         ElasticSearchNote elasticSearchNote = new ElasticSearchNote();
@@ -50,7 +52,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
             elasticSearchNote.setNoteTitle(note.getNoteTitle());
             elasticSearchNote.setNoteParticulars(note.getNoteParticulars());
             elasticSearchNote.setUserId(note.getUserId());
-            note.setEsId(elasticSearchServer.save(elasticSearchNote));
+            note.setEsId(elasticSearchServerImpl.save(elasticSearchNote));
             flag = this.updateById(note);
         }else {
             elasticSearchNote.setNoteId(note.getNoteId());
@@ -59,7 +61,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
             elasticSearchNote.setNoteTitle(note.getNoteTitle());
             elasticSearchNote.setNoteParticulars(note.getNoteParticulars());
             elasticSearchNote.setUserId(note.getUserId());
-            note.setEsId(elasticSearchServer.save(elasticSearchNote));
+            note.setEsId(elasticSearchServerImpl.save(elasticSearchNote));
             flag = this.updateById(note);
         }
         if (flag == true){
@@ -71,7 +73,7 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
 
     public boolean deleteNote(Integer noteId) {
         Note note = this.getById(noteId);
-        elasticSearchServer.delete(note.getEsId());
+        elasticSearchServerImpl.delete(note.getEsId());
         String noteImgIds = note.getNoteImgIds();
         if (noteImgIds != null && noteImgIds != "" && noteImgIds != "\"\""){
             String[] imgstring = null;
@@ -111,6 +113,28 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
         return note;
     }
 
+    public Note selectNoteHighlightField(Integer noteId) {
+        Note note = new Note();
+        if(noteId == null){
+            System.out.println("新增笔记");
+        }else {
+            note = this.getById(noteId);
+            System.out.println(note.toString());
+            if (note.getNoteImgIds() != null && note.getNoteImgIds() != "" && note.getNoteImgIds() != "\"\""){
+                String[] imgstring = null;
+                imgstring = note.getNoteImgIds().replace("\"","").split(",");
+                Img[] imgs = new Img[imgstring.length];
+                for (int i = 0; i < imgs.length; i++) {
+                    imgs[i] = imgUploadingUrlService.getById(imgstring[i]);
+                }
+                note.setNoteImgs(imgs);
+            }
+        }
+        System.out.println(note.toString());
+        return note;
+    }
+
+
     public List<Note> selectUserNote(Integer userId) {
 //        List<Note> noteList = new LinkedList<>();
 //        Map map = new HashMap();
@@ -132,9 +156,29 @@ public class NoteSubmitService extends ServiceImpl<NoteSubmitDao, Note> {
         if (noteTitleAndNoteParticulars == null || noteTitleAndNoteParticulars == ""){
             noteList = this.selectUserNote(userId);
         }else {
-            List<ElasticSearchNote> elasticSearchNoteList = elasticSearchServer.findByNoteTitleAndNoteParticulars(noteTitleAndNoteParticulars,userId);
+            System.out.println("selectNoteEs高亮查询");
+            List<SearchHit<ElasticSearchNote>> elasticSearchNoteList = elasticSearchServerImpl.findByNoteTitleAndNoteParticulars(noteTitleAndNoteParticulars,userId);
             for (int i = 0; i < elasticSearchNoteList.size(); i++) {
-                noteList.add(this.getById(elasticSearchNoteList.get(i).getNoteId()));
+                System.out.println(elasticSearchNoteList.get(i).getContent().getNoteId());
+                Note note = this.getById(elasticSearchNoteList.get(i).getContent().getNoteId());
+                if (elasticSearchNoteList.get(i).getHighlightFields() != null){
+                    Map<String, List<String>> getHighlightFieldsMap = elasticSearchNoteList.get(i).getHighlightFields();
+                    if (getHighlightFieldsMap.get("noteTile") != null){
+                        String noteTitleHighlights = "";
+                        for (String setNoteTitle:getHighlightFieldsMap.get("noteTile")) {
+                            noteTitleHighlights = noteTitleHighlights+setNoteTitle;
+                        }
+                        note.setNoteTitleHighlight(noteTitleHighlights);
+                    }
+                    if (getHighlightFieldsMap.get("noteParticulars") != null){
+                        String noteParticularsHighlights = "";
+                        for (String getHighlightFields:getHighlightFieldsMap.get("noteParticulars")) {
+                            noteParticularsHighlights = noteParticularsHighlights+getHighlightFields;
+                        }
+                        note.setNoteParticularsHighlight(noteParticularsHighlights);
+                    }
+                }
+                noteList.add(note);
             }
             System.out.println("selectUserNote数据库读取内容："+noteList.toString());
         }

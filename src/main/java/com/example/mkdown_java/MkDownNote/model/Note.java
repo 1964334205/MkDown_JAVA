@@ -45,11 +45,16 @@ public class Note implements Serializable {
     @TableField("note_title")
     private String noteTitle;
 
+    @TableField(exist = false)
+    private String noteTitleHighlight;
     /**
      * 笔记内容
      */
     @TableField("note_particulars")
     private String noteParticulars;
+
+    @TableField(exist = false)
+    private String noteParticularsHighlight;
 
     @TableField("es_id")
     private Integer esId;
