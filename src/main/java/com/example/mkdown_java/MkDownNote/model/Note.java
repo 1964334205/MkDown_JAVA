@@ -30,8 +30,8 @@ public class Note implements Serializable {
     /**
      * ID
      */
-    @TableId(value = "note_id",type = IdType.AUTO)
-    private Integer noteId;
+    @TableId(value = "id",type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 用户ID
@@ -42,30 +42,30 @@ public class Note implements Serializable {
     /**
      * 笔记标题
      */
-    @TableField("note_title")
-    private String noteTitle;
+    @TableField("title")
+    private String title;
 
     @TableField(exist = false)
-    private String noteTitleHighlight;
+    private String titleHighlight;
     /**
      * 笔记内容
      */
-    @TableField("note_particulars")
-    private String noteParticulars;
+    @TableField("particulars")
+    private String particulars;
 
     @TableField(exist = false)
-    private String noteParticularsHighlight;
+    private String particularsHighlight;
 
     @TableField("es_id")
     private Integer esId;
 
     @TableField(exist = false)
-    private Img[] noteImgs;
+    private Img[] idmgs;
     /**
      * 笔记图片
      */
-    @TableField(value = "note_img_ids")
-    private String noteImgIds;
+    @TableField(value = "img_ids")
+    private String imgIds;
     /**
      *
      * 创建时间

@@ -1,5 +1,6 @@
 package com.example.mkdown_java.User.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -29,8 +30,8 @@ public class User implements Serializable {
     /**
      * 用户ID
      */
-    @TableId(value = "user_id")
-    private Integer userId;
+    @TableId(value = "id",type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 用户名称
@@ -41,9 +42,9 @@ public class User implements Serializable {
     /**
      * 用户密码
      */
-    @TableField("user_password")
-    private String userPassword;
+    @TableField("password")
+    private String password;
 
     @TableField(exist = false)
-    private String userPasswordVerify;
+    private String passwordVerify;
 }

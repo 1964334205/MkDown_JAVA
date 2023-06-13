@@ -2,39 +2,60 @@ package com.example.mkdown_java.User.controller;
 
 import com.example.mkdown_java.User.model.User;
 import com.example.mkdown_java.User.service.UserService;
-import com.example.mkdown_java.utils.Result;
+import com.example.mkdown_java.common.CommonResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-@RestController
+import org.springframework.web.bind.annotation.*;
+
+@RestController()
 @RequestMapping("/User")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
+    private static final Logger logger
+            = LoggerFactory.getLogger(UserController.class);
+
+    /**
+     * 登录账户
+     * @param user
+     * @return
+     */
     @PostMapping("/login")
-    public Result<User> loginController(@RequestBody User user){
-        System.out.println(user);
-        User Selectuser = userService.selectUser(user);
-        if(Selectuser!=null){
-            return Result.success(Selectuser,"登录成功！");
-        }else{
-            return Result.error("123","账号或密码错误！");
-        }
+    public CommonResult loginController(@RequestBody User user){
+        logger.debug("登录 账户" + user);
+        return userService.login(user);
     }
 
+    /**
+     * 退出登录
+     * @return
+     */
+    @GetMapping("/logOut")
+    public CommonResult logOutController(){
+        logger.debug("删除 success");
+        return userService.logOut();
+    }
+
+    /**
+     * 注销账户
+     * @return
+     */
+    @GetMapping("/logOff")
+    public CommonResult logOffController(){
+        logger.debug("删除 User");
+        return userService.logOff();
+    }
+
+    /**
+     * 注册账户
+     * @param newUser
+     * @return
+     */
     @PostMapping("/register")
-    public Result<User> registController(@RequestBody User newUser){
-        System.out.println(newUser);
-        User user = userService.registService(newUser);
-        if(user!=null){
-            return Result.success(user,"注册成功！");
-        }else{
-            return Result.error("456","用户名已存在！");
-        }
+    public CommonResult registController(@RequestBody User newUser){
+        return userService.registService(newUser);
     }
-
 }

@@ -12,6 +12,19 @@ spring:
 
   main:
     allow-bean-definition-overriding: true
+
+  data:
+    redis:
+      host: 127.0.0.1
+      password: 123456
+      port: 6379
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
 Qiniu:
   AccessKey:
     c07IdeJTcsMr0b23Dqw6Ay75wsVQZ5jzTsdJrIfC
@@ -24,3 +37,10 @@ mybatis-plus:
   configuration:
     jdbc-type-for-null: 'null'
     call-setters-on-nulls: true
+
+logging:
+  config: src/main/resources/logback.xml
+  level:
+    #对应包下的日志级别
+    com.example.mkdown_java: trace
+

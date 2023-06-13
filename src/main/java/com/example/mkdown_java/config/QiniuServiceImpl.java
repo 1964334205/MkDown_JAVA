@@ -21,8 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author: 12613
@@ -87,19 +85,34 @@ public class QiniuServiceImpl {
 
     }
 
+    /**
+     * 上传图片
+     */
     public Img saveFile(MultipartFile uploadFile,Img img) {
-        img.setImgId(UUIDUtil.getUUID()) ;
-        Configuration cfg = new Configuration(Region.huabei());
+        // 生成图片id
+        img.setId(UUIDUtil.getUUID()) ;
+        // 设置上传大区地址(北美)
+        Configuration cfg = new Configuration(Region.beimei());
+        // 创建上传类
         UploadManager uploadManager = new UploadManager(cfg);
-        String bucket = "mkdownimg";
+        // 设置上传空间名
+        String bucket = "whaiwai1";
+        // 获取文件名
         String fileName = uploadFile.getOriginalFilename();
-        String key = img.getImgId() + fileName.substring(fileName.lastIndexOf("."));
+        // 设置新文件名+后缀
+        String key = img.getId() + fileName.substring(fileName.lastIndexOf("."));
+        // 设置上传秘钥
         Auth auth = Auth.create(accessKey, secretKey);
+        // 生成上传token
         String upToken = auth.uploadToken(bucket);
         try {
+            // 开始上传图片
             Response response = uploadManager.put(uploadFile.getBytes(), key, upToken);
+            // 上传完回复对象
             DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
-            img.setImgUrl("http://ruuuxlto6.hb-bkt.clouddn.com/" + putRet.key);
+            // 设置文件URL和文件在七牛云的文件名
+            img.setUrl("http://rw34jwhy2.bkt.gdipper.com/" + putRet.key);
+            // 返回文件信息
             return img;
         } catch (QiniuException e) {
             logger.error("上传文件失败", e);

@@ -8,16 +8,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 
-/**
- * <p>
- * 借用申请审批表
- * </p>
- *
- * @author fx
- * @since 2019-11-22
- */
+
 @Data
-@Document(indexName = "elastic_search_note")
+@Document(indexName = "elastic_search_note_test")
 public class ElasticSearchNote implements Serializable {
 
     /**
@@ -25,7 +18,7 @@ public class ElasticSearchNote implements Serializable {
      */
     @Id
     @Field(type = FieldType.Integer)
-    private Integer noteId;
+    private Integer id;
 
     /**
      * 用户ID
@@ -36,13 +29,13 @@ public class ElasticSearchNote implements Serializable {
     /**
      * 笔记标题
      */
-    @Field(type = FieldType.Text,analyzer="ik_max_word", searchAnalyzer="ik_smart", copyTo = "descriptiveContent")
-    private String noteTitle;
+    @Field(type = FieldType.Text,analyzer="ik_smart", searchAnalyzer="ik_smart", copyTo = "descriptiveContent")
+    private String title;
 
     /**
      * 笔记内容
      */
-    @Field(type = FieldType.Text,analyzer="ik_max_word", searchAnalyzer = "ik_smart", copyTo = "descriptiveContent")
-    private String noteParticulars;
+    @Field(type = FieldType.Text,analyzer="ik_smart", searchAnalyzer = "ik_smart", copyTo = "descriptiveContent")
+    private String particulars;
 
 }

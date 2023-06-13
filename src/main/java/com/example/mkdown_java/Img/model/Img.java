@@ -29,14 +29,14 @@ public class Img implements Serializable {
     /**
      * 文件ID
      */
-    @TableId(value = "img_id")
-    private Integer imgId;
+    @TableId(value = "id")
+    private Integer id;
 
     /**
-     * 用户ID
+     * 文件URL
      */
-    @TableField("img_url")
-    private String imgUrl;
+    @TableField("url")
+    private String url;
 
     /**
      * 创建时间

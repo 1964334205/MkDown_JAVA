@@ -16,4 +16,13 @@ public class MkDownJavaApplication {
         }
     }
 
+//    @Bean
+//    public EmbeddedServletContainerCustomizer containerCustomizer() {
+//        return (container -> {
+//            container.setSessionTimeout(1000);  // session timeout value
+//            container.setSessionTimeout(1000); // 会话超时值
+//        });
+//    }
+//}
+
 }

@@ -32,17 +32,17 @@ public class ImgUploadingUrlService extends ServiceImpl<ImgDao, Img>{
 //                String fileName= UUIDUtil.getUUID();
 //                System.out.print("generated fileName: " +file.getOriginalFilename());
 //                String[] fileNames = file.getOriginalFilename().split("\\.");
-//                img.setImgId(fileName);
+//                img.setId(fileName);
 //                //七牛云 oss 对象存储    cdn按流量计费，不是按存储空间计费
 //
 //                //从配置中读取图片路径文件夹
-//                img.setImgUrl("E:\\dev\\mkdown-vue\\imges\\"+ img.getImgId()+"."+fileNames[fileNames.length-1]);
+//                img.setUrl("E:\\dev\\mkdown-vue\\imges\\"+ img.getId()+"."+fileNames[fileNames.length-1]);
 //                // todo 把图片大小限制为10M
 //                try {
 //                    System.out.println(file.getOriginalFilename());
 //                    BufferedOutputStream out = new BufferedOutputStream(
 //                            new FileOutputStream(new File(
-//                                    img.getImgUrl())));
+//                                    img.getUrl())));
 //                    //logback;
 //                    System.out.println(file.getName());
 //                    out.write(file.getBytes());
@@ -60,11 +60,18 @@ public class ImgUploadingUrlService extends ServiceImpl<ImgDao, Img>{
 //        return img;
 //    }
 
+    /**
+     * 上传图片
+     * @param file
+     * @return
+     */
     public Img  Submit(MultipartFile file) {
         Img img = new Img();
         if (!file.isEmpty()) {
+            // 上传图片至七牛云
             img = qiniuService.saveFile(file,img);
         }
+        // 保存图片信息
         this.save(img);
         return img;
     }

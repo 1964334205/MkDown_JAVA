@@ -14,6 +14,10 @@ import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfigurat
  */
 @Configuration
 public class RestClientConfig extends ElasticsearchConfiguration {
+
+    /**
+     * 设置elastic数据库的链接秘钥和账户
+     */
     @Override
     public ClientConfiguration clientConfiguration() {
 //        HttpHeaders compatibilityHeaders = new HttpHeaders();
