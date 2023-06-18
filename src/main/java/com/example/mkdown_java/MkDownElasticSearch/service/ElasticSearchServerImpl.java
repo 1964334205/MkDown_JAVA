@@ -5,6 +5,8 @@ import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.MultiMatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import com.example.mkdown_java.MkDownElasticSearch.model.ElasticSearchNote;
+import com.example.mkdown_java.common.ResultStatus;
+import com.example.mkdown_java.common.exception.ResultException;
 import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * es业务层
+ */
 @Service
 public class ElasticSearchServerImpl {
 
@@ -35,8 +40,6 @@ public class ElasticSearchServerImpl {
 
     private static final Logger logger
             = LoggerFactory.getLogger(ElasticSearchServerImpl.class);
-//    @Autowired
-//    private NoteRepository noteRepository;
 
     private ElasticsearchOperations elasticsearchOperations;
 
@@ -44,30 +47,13 @@ public class ElasticSearchServerImpl {
         this.elasticsearchOperations = elasticsearchOperations;
     }
 
-    //    @PostMapping("/person")
-//    public String saveElasticSearchNoteBian(@RequestBody ElasticSearchNote elasticSearchNote) {
-//        ElasticSearchNote elasticSearchNote1 = elasticsearchOperations.save(elasticSearchNote);
-//        return elasticSearchNote1.getId();
-//    }
-
-//    @GetMapping("/person")
-//    public String save() {
-//        ElasticSearchNote elasticSearchNote = new ElasticSearchNote();
-//        elasticSearchNote.setId("1");
-//        elasticSearchNote.setTitle("笔记内容");
-//        elasticSearchNote.setParticulars("阿萨德佛i还是代课教师发哈山东科技方法，水电费灰色空间分段函数，收到开发环境山东科技发哈");
-//        System.out.println(elasticSearchNote.toString());
-//        ElasticSearchNote elasticSearchNote1 = elasticsearchOperations.save(elasticSearchNote);
-//        return elasticSearchNote1.getId();
-//    }
-
     /**
      * 保存笔记到es
      * @param elasticSearchNote
      * @return
      */
-    public int save(ElasticSearchNote elasticSearchNote) {
-       return elasticsearchOperations.save(elasticSearchNote).getId();
+    public ElasticSearchNote save(ElasticSearchNote elasticSearchNote) {
+       return elasticsearchOperations.save(elasticSearchNote);
     }
 
     /**
@@ -75,10 +61,20 @@ public class ElasticSearchServerImpl {
      * @param delete
      * @return
      */
-    public int delete(int delete) {
+    public int delete(int delete) throws ResultException {
+        // 创建es对象
         ElasticSearchNote elasticSearchNote = new ElasticSearchNote();
+        // 设置es对象id
         elasticSearchNote.setId(delete);
-        return Integer.parseInt(elasticsearchOperations.delete(elasticSearchNote));
+        // 根据id删除指定es文档
+        String esNoteId = elasticsearchOperations.delete(elasticSearchNote);
+        //判断是否删除成功
+        if (esNoteId == null){
+            // 删除失败，抛出es数据库异常
+            throw new ResultException(ResultStatus.INTERNAL_ELASTIC_CONNECT_FAIL);
+        }
+        // 删除成功返回esID
+        return Integer.parseInt(esNoteId);
     }
 
     /**
@@ -87,7 +83,7 @@ public class ElasticSearchServerImpl {
      * @return
      */
     public ElasticSearchNote findById(@PathVariable("id") int id) {
-
+        // 根据ID查询es中的文档，返回值为ElasticSearchNote
         return elasticsearchOperations.get(Integer.toString(id), ElasticSearchNote.class);
     }
 
@@ -119,12 +115,12 @@ public class ElasticSearchServerImpl {
      * @return
      */
     public List<SearchHit<ElasticSearchNote>> findByNoteTitleAndNoteParticulars(String searchKey, Integer userId) {
-        // 需要高亮的字段
+        // 需要高亮的字段particulars，title
         ArrayList<HighlightField> highlightFields = new ArrayList<HighlightField>();
         highlightFields.add(new HighlightField("particulars"));
         highlightFields.add(new HighlightField("title"));
 
-        // 创建需要搜索的字段
+        // 创建需要搜索的字段，particulars，title
         ArrayList<String> searchFields = new ArrayList<>() {
             {
                 add("particulars");
@@ -132,16 +128,16 @@ public class ElasticSearchServerImpl {
             }
         };
 
-        //设置上下文搜索宽度
+        //设置上下文搜索宽度为5
         HighlightParameters highlightParameters = HighlightParameters.builder().withBoundaryMaxScan(5).build();
-        // 设置高亮对象
+        // 设置高亮对象为上面设置的highlightFields
         Highlight highlight = new Highlight(highlightParameters, highlightFields);
-        // 设置搜索条件语句对象
+        // 设置搜索根据userId条件语句对象
         Query byUserId = MatchQuery.of(m -> m.field("userId").query(userId))._toQuery();
-        // 设置搜索条件语句对象
+        // 使用searchFields设置搜索条件语句对象，查询目标为searchKey
         Query byKey = MultiMatchQuery.of(m -> m.fields(searchFields).query(searchKey))._toQuery();
 
-        // 设置查询对象 条件为byUserId and byKey
+        // 设置查询对象 条件为byUserId and byKey。查询目标为ElasticSearchNote，高亮目标为highlight
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(q -> q.bool(b -> b.must(byUserId, byKey)
                 ))
@@ -149,7 +145,7 @@ public class ElasticSearchServerImpl {
                 .build();
         // 执行搜索语句，并设置返回类型为：ElasticSearchNote
         SearchHits<ElasticSearchNote> elasticSearchNoteSearchHits = elasticsearchOperations.search(nativeQuery, ElasticSearchNote.class);
-        // 获取查询结果
+        // 获取查询高亮结果
         List<SearchHit<ElasticSearchNote>> notesAndEsNote = elasticSearchNoteSearchHits.getSearchHits();
 //        List<ElasticSearchNote> notes = elasticSearchNoteSearchHits.map(hit -> hit.getContent()).toList();
         return notesAndEsNote;

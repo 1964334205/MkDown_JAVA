@@ -1,12 +1,18 @@
 package com.example.mkdown_java.User.util;
 
 import com.example.mkdown_java.User.model.User;
+import com.example.mkdown_java.config.ResponseResultBody;
 import jakarta.servlet.http.HttpSession;
 
-
+/**
+ * 用户登录操作类
+ */
+@ResponseResultBody
 public class UserSession {
+    // session保存在Redis中的key
     static String USER_SESSION_KEY = "user";
 
+    //
     private HttpSession httpSession;
 
     /**
@@ -18,7 +24,7 @@ public class UserSession {
     }
 
     /**
-     * 根据HttpSession 获取session
+     * 设置当前连接的HttpSession
      * @param httpSession
      */
     public UserSession(HttpSession httpSession) {
@@ -27,6 +33,7 @@ public class UserSession {
 
     /**
      * 设置用户登录Session
+     * session的key为USER_SESSION_KEY
      * @param user
      */
     public void set(User user) {
@@ -38,7 +45,7 @@ public class UserSession {
      * @return
      */
     public User get() {
-        //根据当前链接cookie名称获取session的id获取，得到session信息
+        //根据当前链接cookie中保存的sessionId和USER_SESSION_KEY获取当前连接的用户信息
         User user = (User) httpSession.getAttribute(USER_SESSION_KEY);
         return user;
     }

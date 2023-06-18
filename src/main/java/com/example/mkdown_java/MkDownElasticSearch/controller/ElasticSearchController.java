@@ -4,6 +4,10 @@ package com.example.mkdown_java.MkDownElasticSearch.controller;
 import com.example.mkdown_java.MkDownElasticSearch.model.ElasticSearchNote;
 import com.example.mkdown_java.MkDownElasticSearch.service.ElasticSearchServerImpl;
 import com.example.mkdown_java.User.util.UserSession;
+import com.example.mkdown_java.common.exception.ResultException;
+import com.example.mkdown_java.config.ResponseResultBody;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @author geng
- * 2020/12/20
+ * es数据库请求接口
  */
 @RestController
 @RequestMapping("/ElasticSearchNote")
+@ResponseResultBody
 public class ElasticSearchController {
 
     @Autowired
@@ -26,8 +30,6 @@ public class ElasticSearchController {
     private static final Logger logger
             = LoggerFactory.getLogger(ElasticSearchController.class);
 
-    private int userIdLs = 1909167524;
-
     /**
      * 保存笔记到es
      * @param elasticSearchNote
@@ -35,14 +37,14 @@ public class ElasticSearchController {
      */
     @ResponseBody
     @PostMapping("/save")
-    public int save(@RequestBody ElasticSearchNote elasticSearchNote) {
+    public ElasticSearchNote save(@RequestBody ElasticSearchNote elasticSearchNote) {
         return elasticSearchServerImpl.save(elasticSearchNote);
     }
 
     /**
      * 根据id查询笔记
      * @param id
-     * @return
+     * @return ElasticSearchNote
      */
     @GetMapping("/person/{id}")
     public ElasticSearchNote findById(@PathVariable("id")  int id) {
@@ -60,13 +62,26 @@ public class ElasticSearchController {
     }
 
     /**
+     * delete方法专门的返回值
+     * 原因：springboot会把string返回值给识别成html结构，导致无法序列化为Result类型。抛出类型转换异常。
+     * 所以使用类的方式返回数据
+     * 数据最好使用对象形式返回
+     */
+    @Data
+    @AllArgsConstructor
+    class EsDeleteResponse{
+        private int esId;
+    }
+
+    /**
      * 删除笔记
      * @param id
      * @return
+     * @throws ResultException
      */
     @GetMapping("/delete/{id}")
-    public int delete(@PathVariable("id")  int id) {
-        return elasticSearchServerImpl.delete(id);
+    public EsDeleteResponse delete(@PathVariable("id")  int id) throws ResultException {
+       return new EsDeleteResponse(elasticSearchServerImpl.delete(id));
     }
 
 //    @GetMapping("/searchNote/{noteTitleAndNoteParticulars}")

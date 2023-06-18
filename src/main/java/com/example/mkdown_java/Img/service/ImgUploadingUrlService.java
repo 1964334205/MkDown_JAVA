@@ -8,13 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * <p>
- * 库存交旧待办表 服务实现类
- * </p>
- *
- * @author yj
- * @since 2019-11-21
+/**、
+ * 图片上传
  */
 @Service
 public class ImgUploadingUrlService extends ServiceImpl<ImgDao, Img>{

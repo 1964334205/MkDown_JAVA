@@ -23,11 +23,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * @author: 12613
- * @project: mooc
- * @pcakage: com.king.mooc.service.impl.QiniuServiceImpl
- * @date: 2022年05月02日 00:38
- * @description:
+ * 文件上传类
  */
 @Service
 public class QiniuServiceImpl {
@@ -86,7 +82,7 @@ public class QiniuServiceImpl {
     }
 
     /**
-     * 上传图片
+     * 上传图片至七牛云
      */
     public Img saveFile(MultipartFile uploadFile,Img img) {
         // 生成图片id

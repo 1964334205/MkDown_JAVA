@@ -1,6 +1,9 @@
 package com.example.mkdown_java.common;
 import java.util.UUID;
 
+/**
+ * UUID生成类
+ */
 public class UUIDUtil {
     /**
      * 生成UUID

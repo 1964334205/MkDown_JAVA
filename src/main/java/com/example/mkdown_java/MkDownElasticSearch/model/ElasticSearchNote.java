@@ -8,7 +8,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 
-
+/**
+ * es实体类
+ */
 @Data
 @Document(indexName = "elastic_search_note_test")
 public class ElasticSearchNote implements Serializable {

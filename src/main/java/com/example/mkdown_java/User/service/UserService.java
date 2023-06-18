@@ -6,17 +6,25 @@ import com.example.mkdown_java.MkDownNote.service.NoteSubmitService;
 import com.example.mkdown_java.User.dao.UserDao;
 import com.example.mkdown_java.User.model.User;
 import com.example.mkdown_java.User.util.UserSession;
-import com.example.mkdown_java.common.CommonResult;
+import com.example.mkdown_java.common.ResultStatus;
+import com.example.mkdown_java.common.exception.ResultException;
+import com.example.mkdown_java.config.ResponseResultBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 用户业务操作
+ */
 @Service
+@ResponseResultBody
 public class UserService extends ServiceImpl<UserDao, User> {
 
     @Autowired
     private NoteSubmitService noteSubmitService;
+
+    boolean flag = false;
 
     private static final Logger logger
             = LoggerFactory.getLogger(UserService.class);
@@ -26,7 +34,7 @@ public class UserService extends ServiceImpl<UserDao, User> {
      * @param user
      * @return
      */
-    public CommonResult login(User user) {
+    public String login(User user) throws ResultException {
         //创建查询sql对象
         QueryWrapper<User> QR=new QueryWrapper();
         // 查询用户是否存在
@@ -35,9 +43,24 @@ public class UserService extends ServiceImpl<UserDao, User> {
             // 设置用户登录Session
             new UserSession().set(selecttuser);
             // 返回user名称
-            return CommonResult.success(selecttuser.getUserName());
+            return selecttuser.getUserName();
         }else {
-            return CommonResult.failed("登录失败");
+            // 返回用户ID不存在异常
+            throw new ResultException(ResultStatus.USER_ID_NOT_EXIST);
+        }
+    }
+
+    /**
+     * 检测用户是否已经登录
+     * @return
+     */
+    public boolean loggedIn() {
+        // 获取用户信息
+        User user = new UserSession().get();
+        if (user == null){
+            return false;
+        }else {
+            return true;
         }
     }
 
@@ -45,28 +68,36 @@ public class UserService extends ServiceImpl<UserDao, User> {
      * 退出登录
      * @return
      */
-    public CommonResult logOut() {
+    public void logOut() {
         // 删除用户Session
         new UserSession().invalidate();
-        return CommonResult.success("退出成功");
     }
 
     /**
      * 注销账户
      * @return
      */
-    public CommonResult logOff() {
+    public boolean logOff() throws ResultException {
         // 获取用户信息
         User user = new UserSession().get();
         // 删除用户所有笔记
-        noteSubmitService.deleteNoteAll(user.getId());
+        flag = noteSubmitService.deleteNoteAll(user.getId());
+        if(!flag){
+            // 返回mysql数据库异常
+            throw new ResultException(ResultStatus.INTERNAL_MYSQ_CONNECT_FAIL);
+        }
         //退出登录状态
         logOut();
         // 删除当前用户
-        this.removeById(user.getId());
+        flag = this.removeById(user.getId());
+        if(!flag){
+            // 返回mysql数据库异常
+            throw new ResultException(ResultStatus.INTERNAL_MYSQ_CONNECT_FAIL);
+        }
+        return flag;
 //        // 删除删除用户Session
 //        new UserSession().invalidate();
-        return CommonResult.success("注销成功");
+
     }
 
 
@@ -75,22 +106,24 @@ public class UserService extends ServiceImpl<UserDao, User> {
      * @param user
      * @return
      */
-    public CommonResult registService(User user) {
+    public String registService(User user) throws ResultException {
         // sql查询对象
         QueryWrapper<User> QR=new QueryWrapper();
         // 查询用户名是否已存在
         User selectuser= getOne(QR.eq("User_Name",user.getUserName()).last("limit 1"));
         if (selectuser != null){
-            return CommonResult.failed("注册失败，请更换账户名");
+            throw new ResultException(ResultStatus.USER_NAME_PRESENCE);
         }else {
-            //返回创建好的用户对象(带uid)
-//            user.setId(UUIDUtil.getUUID());
-            // 保存对象
+            // 保存用户信息，创建账户
             boolean file = this.save(user);
+            if(!flag){
+                // 返回mysql数据库异常
+                throw new ResultException(ResultStatus.INTERNAL_MYSQ_CONNECT_FAIL);
+            }
             logger.debug("保存用户信息："+user.toString());
             // 登录创建好的对象
             login(user);
-            return CommonResult.success(user.getUserName());
+            return user.getUserName();
         }
     }
 }

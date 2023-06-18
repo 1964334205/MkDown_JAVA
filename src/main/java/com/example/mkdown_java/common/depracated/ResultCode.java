@@ -1,5 +1,9 @@
-package com.example.mkdown_java.common;
+package com.example.mkdown_java.common.depracated;
 
+/**
+ * http状态码
+ * 已废弃
+ */
 public enum ResultCode implements IErrorCode {
     SUCCESS(200, "操作成功"),
     FAILED(500, "操作失败"),

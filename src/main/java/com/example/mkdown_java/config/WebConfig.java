@@ -36,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
 //    }
 
     /**
-     *  拦截器
+     *  跨域拦截器
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -58,6 +58,9 @@ public class WebConfig implements WebMvcConfigurer {
         return factory.createMultipartConfig();
     }
 
+    /**
+     * 用户登录拦截
+     */
     @Resource
     private LoginIntercept loginIntercept;
     /**
@@ -67,10 +70,12 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 //        registry.addInterceptor(new LoginIntercept());//可以直接new 也可以属性注入
         logger.debug("拦截器");
+        //判断是否执行拦截
         registry.addInterceptor(loginIntercept).
+                // 放行指定URL
                 excludePathPatterns("/api/User/login").
                 excludePathPatterns("/api/User/register").
-                addPathPatterns("/**");    // 拦截所有 url
+                addPathPatterns("/**");    // 拦截其余 url
     }
 
     /**
@@ -86,13 +91,16 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * 设置客户端Cookie 生命周期
+     * 设置客户端Cookie 生命周期为一个月
      */
     @Bean
     public CookieSerializer cookieSerializer() {
         DefaultCookieSerializer serializer = new DefaultCookieSerializer();
+        // 设置cookie名称
         serializer.setCookieName("session_id");
+        //路径
         serializer.setCookiePath("/");
+        //有效时间
         serializer.setCookieMaxAge(30*24*60*60);
         return serializer;
     }

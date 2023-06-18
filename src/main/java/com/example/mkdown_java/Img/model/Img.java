@@ -11,20 +11,13 @@ import java.io.Serializable;
 import java.sql.Time;
 
 /**
- * <p>
- * 借用申请审批表
- * </p>
- *
- * @author fx
- * @since 2019-11-22
+ * 图片实体类
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("mkDownImg")
 public class Img implements Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * 文件ID

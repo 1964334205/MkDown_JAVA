@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
-
+ * 图片上传接口   暂时无用
  */
 @Mapper
 public interface ImgDao extends BaseMapper<Img> {

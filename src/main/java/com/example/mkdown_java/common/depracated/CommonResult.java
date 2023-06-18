@@ -1,13 +1,27 @@
-package com.example.mkdown_java.common;
+package com.example.mkdown_java.common.depracated;
 
+/**
+ * 数据返回规范类
+ *已废弃
+ * @param <T>
+ */
 public class CommonResult<T> {
+    // 状态码
     private long code;
+    //状态描述
     private String message;
+    //返回值
     private T data;
 
     protected CommonResult() {
     }
 
+    /**
+     * 构造器
+     * @param code
+     * @param message
+     * @param data
+     */
     protected CommonResult(long code, String message, T data) {
         this.code = code;
         this.message = message;
@@ -21,6 +35,15 @@ public class CommonResult<T> {
      */
     public static <T> CommonResult<T> success(T data) {
         return new CommonResult<T>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
+    }
+
+    /**
+     * 自定义返回结果
+     *
+     * @param data 获取的数据
+     */
+    public static <T> CommonResult<T> ErroCode(ErroCode erroCode, T data) {
+        return new CommonResult<T>(erroCode.getCode(), erroCode.getMessage(), data);
     }
 
     /**
