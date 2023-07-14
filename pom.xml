@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.6</version>
+        <version>3.1.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
@@ -19,21 +19,24 @@
         <mybatis-plus.version>3.0.5</mybatis-plus.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-jdbc</artifactId>-->
+<!--        </dependency>-->
 
+<!--        springboot web服务-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+<!--        mysql-->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -52,28 +55,14 @@
             <version>3.5.3</version>
         </dependency>
 
+<!--        lombok  自动生成get set 方法-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.26</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.21</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>1.5.20</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-common</artifactId>
-            <version>2.9.2</version>
-        </dependency>
-
+<!--        json序列化  序列化对象-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -87,34 +76,24 @@
             <version>[7.7.0, 7.10.99]</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
 
+<!--        es  身份认证-->
         <dependency>
             <groupId>io.github.hakky54</groupId>
             <artifactId>sslcontext-kickstart</artifactId>
             <version>7.1.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.javatuples</groupId>
-            <artifactId>javatuples</artifactId>
-            <version>1.2</version>
-        </dependency>
+        <!--java元组操作-->
+<!--        <dependency>-->
+<!--            <groupId>org.javatuples</groupId>-->
+<!--            <artifactId>javatuples</artifactId>-->
+<!--            <version>1.2</version>-->
+<!--        </dependency>-->
 
 
         <!--日志-->
@@ -123,17 +102,13 @@
             <artifactId>logback-core</artifactId>
 <!--            <version>1.3.7</version>-->
         </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
 <!--            <version>2.0.7</version>-->
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-log4j12</artifactId>-->
-<!--            <version>2.0.7</version>-->
-<!--        </dependency>-->
 
 
 
@@ -155,37 +130,57 @@
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>MkDown_JAVA</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
 
     </dependencies>
 
+    <profiles>
+        <!--        定义活动配置文件-->
+        <profile>
+            <id>127</id>
+            <properties>
+                <activatedYml>127</activatedYml>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <activatedYml>production</activatedYml>
+            </properties>
+        </profile>
+    </profiles>
     <build>
+        <finalName>${project.name}-${project.version}-${activatedYml}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-
-        <!-- 添加资源 -->
-        <!--        <resources>-->
-        <!--            <resource>-->
-        <!--                <directory>src/main/resources</directory>-->
-        <!--                &lt;!&ndash; src/main/resources下的指定资源放行 &ndash;&gt;-->
-        <!--                <includes>-->
-        <!--                    <include>**/*.properties</include>-->
-        <!--                    <include>**/*.yml</include>-->
-        <!--                    <include>**/*.xml</include>-->
-        <!--                    -->
-        <!--                </includes>-->
-        <!--                <filtering>false</filtering>-->
-        <!--            </resource>-->
-        <!--        </resources>-->
-
+        <!-- profile对资源的操作 -->
+        <resources>
+            <!--打包的时候先去掉所有的配置文件-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>application*.yml</exclude>
+                </excludes>
+            </resource>
+            <!--添加需要包含的文件-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 是否替换yml或者properties里@xx@表示的maven properties属性值 -->
+                <filtering>true</filtering>
+                <!--在打包的时候，根据-P参数，加上需要的yml配置文件-->
+                <includes>
+                    <include>application.yml</include>
+                    <include>application-${activatedYml}.yml</include>
+                    <!--<include>**/application-${profile.active}.yml</include>-->
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 </project>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.mkdown_java.MkDownNote.dao.NoteSubmitDao">
-    <select id="Submit" resultType="com.example.mkdown_java.MkDownNote.model.Note">
+<mapper namespace="top.openfbi.mdnote.note.dao.NoteDao">
+    <select id="Submit" resultType="top.openfbi.mdnote.note.model.Note">
         SELECT  id,userId,noteTite,note_Particulars,isDel FROM note whre;
 
     </select>

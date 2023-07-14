@@ -1,0 +1,91 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/mkdown?serverTimezone=GMT%2B8&characterEncoding=UTF-8&allowMultiQueries=true
+    username: root
+    password: 123456
+
+  messages:
+    basename: messages
+
+  main:
+    allow-bean-definition-overriding: true
+
+  data:
+    redis:
+      host: 127.0.0.1
+      password: 123456
+      port: 6379
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+# 七牛云上传文件配置
+Qiniu:
+  AccessKey:
+    c07IdeJTcsMr0b23Dqw6Ay75wsVQZ5jzTsdJrIfC
+  SecretKey:
+    OnvK6tKv4lAidtRh3aGX6LUdM4geHVxOWoC4O-j6
+  Bucket:
+    whaiwai1
+
+# 本地上传文件配置
+Loacl:
+  # 浏览器域名URL
+  Url:
+    http://localhost:8080
+  # 图片上传路径   nginx或caddy代理路径要保持一致
+  Path:
+    D:/caddy/MkDown/vue3/dist/upload/img
+#    caddy配置路径
+
+#    nginx配置路径
+#    D:/dev/MkDown_JAVA/upload/img
+
+  # 文件访问路径   upload  img 简称ui
+  FileUrl:
+    /ui/
+
+# 使用那个配置上传文件
+#0：七牛云上传  1：本地上传
+FileUploading:
+  PictureBed:
+    1
+
+# 文件上传大小限制
+File:
+  OneFileSize:
+    20
+  TotalFileSize:
+    40
+# Session配置
+Session:
+  # 30*24*60*60
+  CookieMaxAge:
+    2592000
+# es配置
+Es:
+  User:
+    elastic
+  Password:
+    mOHbD=nx0mJAGXLGmomm
+  Url:
+    localhost
+  Post:
+    9200
+  
+mybatis-plus:
+  mapper-locations:  classpath:/Mapper/**/*Mapper.xml
+  type-aliases-package: top.openfbi.mdnote.*.model
+  configuration:
+    jdbc-type-for-null: 'null'
+    call-setters-on-nulls: true
+logging:
+#  config: logback-spring.xml
+  level:
+    #对应包下的日志级别
+    top.openfbi.mdnote: DEBUG
+
